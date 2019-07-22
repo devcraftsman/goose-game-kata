@@ -22,7 +22,11 @@ package com.xpeppers.goosegame.data;
         DUPLICATE_PLAYER,
         PLAYER_NOT_EXISTS,
         INVALID_ROLL,
+        WIN,
+        BOUNCE,
+        BRIDGE,
+        GOOSE,
         KO;
     }    
 
-    }
+}
