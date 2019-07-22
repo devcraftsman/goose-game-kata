@@ -58,11 +58,11 @@ public class MovePlayerTest {
         
         goosegame.addPlayer("pippo");
 
-        Response<PlayerStatus> response = goosegame.move("pippo",4,2);
+        Response<PlayerStatus> response = goosegame.move("pippo",4,3);
         assertTrue(response.status.equals(OK));
         PlayerStatus player = response.payload;
-        assertTrue(player.lastPos == 0);
-        assertTrue(player.currentPos == 6);
+        assertTrue(player.startPosition() == 0);
+        assertTrue(player.lastPosition() == 7);
 
 
     }
@@ -77,15 +77,15 @@ public class MovePlayerTest {
         gooseGame.addPlayer("Pluto");
         
         /*
-            the user writes: "move Pippo 4, 2"
-            the system responds: "Pippo rolls 4, 2. Pippo moves from Start to 6"
+            the user writes: "move Pippo 4, 3"
+            the system responds: "Pippo rolls 4, 3. Pippo moves from Start to 7"
         */
-        Response<PlayerStatus> rsp1 = gooseGame.move("Pippo", 4, 2);
+        Response<PlayerStatus> rsp1 = gooseGame.move("Pippo", 4, 3);
         assertTrue(rsp1.status.equals(OK));
         PlayerStatus st1 = rsp1.payload;
-        assertTrue(st1.currentPos == 6);
+        assertTrue(st1.lastPosition() == 7);
         
-        
+    
         /*
 
             the user writes: "move Pluto 2, 2"
@@ -95,17 +95,87 @@ public class MovePlayerTest {
         Response<PlayerStatus> rsp2 = gooseGame.move("Pluto", 2, 2);
         assertTrue(rsp2.status.equals(OK));
         PlayerStatus st2 = rsp2.payload;
-        assertTrue(st2.currentPos == 4);
+        assertTrue(st2.lastPosition() == 4);
         
         /*
             the user writes: "move Pippo 2, 3"
-            the system responds: "Pippo rolls 2, 3. Pippo moves from 6 to 11"
+            the system responds: "Pippo rolls 2, 3. Pippo moves from 7 to 12"
         */
 
         Response<PlayerStatus> rsp3 = gooseGame.move("Pippo", 2, 3);
         assertTrue(rsp3.status.equals(OK));
         PlayerStatus st3 = rsp3.payload;
-        assertTrue(st3.currentPos == 11);
+        assertTrue(st3.lastPosition()== 12);
+
+    }
+
+
+    @Test
+    public void playerWin() {
+        GooseGame gooseGame = new GooseGame();
+        gooseGame.addPlayer("Pippo");
+
+        // go to 60
+        gooseGame.move("Pippo", 6, 6);
+        gooseGame.move("Pippo", 6, 6);
+        gooseGame.move("Pippo", 6, 6);
+        gooseGame.move("Pippo", 6, 6);
+        Response<PlayerStatus> to60 = gooseGame.move("Pippo", 6, 6);
+        assertTrue(to60.payload.lastPosition() == 60);
+        
+
+        Response<PlayerStatus> win =gooseGame.move("Pippo",1,2);
+        assertTrue(win.status.equals(WIN));
+        assertTrue(win.payload.lastPosition() == GooseGame.END);
+    }
+
+    @Test
+    public void playerBounce() {
+        GooseGame gooseGame = new GooseGame();
+        gooseGame.addPlayer("Pippo");
+
+        // go to 60
+        gooseGame.move("Pippo", 6, 6);
+        gooseGame.move("Pippo", 6, 6);
+        gooseGame.move("Pippo", 6, 6);
+        gooseGame.move("Pippo", 6, 6);
+        Response<PlayerStatus> to60 = gooseGame.move("Pippo", 6, 6);
+        assertTrue(to60.payload.lastPosition() == 60);
+
+        Response<PlayerStatus> bounce =gooseGame.move("Pippo",3,2);
+        assertTrue(bounce.status.equals(BOUNCE));
+        assertTrue(bounce.payload.lastPosition() == 61);
+    }
+
+    @Test
+    public void bridgeJump() {
+        GooseGame gooseGame = new GooseGame();
+        gooseGame.addPlayer("Pippo");
+
+        // go to 60
+        gooseGame.move("Pippo", 2,2);
+        Response<PlayerStatus> bridged = gooseGame.move("Pippo", 1,1);
+    
+        assertTrue(bridged.status.equals(BRIDGE));
+        assertTrue(bridged.payload.lastPosition()== 12);
+    }
+
+    /*
+    If there is one participant "Pippo" on space "3"
+        assuming that the dice get 1 and 1
+        when the user writes: "move Pippo"
+        the system responds: "Pippo rolls 1, 1. Pippo moves from 3 to 5, The Goose. Pippo moves again and goes to 7"
+        */
+    @Test
+    public void gooseMove(){
+
+        GooseGame gooseGame = new GooseGame();
+        gooseGame.addPlayer("Pippo");
+
+        gooseGame.move("Pippo", 1, 2);
+        Response<PlayerStatus> gooseJump = gooseGame.move("Pippo",1,1);
+        assertTrue(gooseJump.status.equals(GOOSE));
+        assertTrue(gooseJump.payload.lastPosition()== 7);
 
     }
 }
