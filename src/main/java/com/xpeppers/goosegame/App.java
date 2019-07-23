@@ -17,7 +17,7 @@ public class App
 
         if ((console = System.console()) != null) {
             PrintWriter writer = console.writer();
-            writer.append("Welcome to the Goose game please choose 'p' fro play or 'q' to quit \n");
+            writer.append("!!Welcome to the Goose game!!\n\n Please choose 'p' for play or 'q' for quit \n");
             writer.flush();
             String choice = console.readLine();
             if (choice.equalsIgnoreCase("p")){
@@ -29,12 +29,11 @@ public class App
                     if (command.equalsIgnoreCase("q")) {
                         exit(writer);
                     }else{
-                        String result = play(command, game);
-                        writer.write(result);
+                        writer.write(play(command, game));
                         writer.flush();
                     }
                 }
-                writer.write("Game Over");
+                writer.write("Game Over\n");
                 exit(writer);
                
             }else{
@@ -58,7 +57,6 @@ public class App
         var addPlayerM = addPlayerP.matcher(command);
         var movePlayerM = movePlayerP.matcher(command);
         if (addPlayerM.matches()){
-
             String playerName = addPlayerM.group(1);
 
             response = Decoder.parseResponse(game.addPlayer(playerName));
@@ -68,7 +66,6 @@ public class App
             Random r = new Random();
             int roll1 = movePlayerM.group(3) == null ? (r.nextInt(6)+1) : Integer.parseInt(movePlayerM.group(3));
             int roll2 = movePlayerM.group(4) == null ? (r.nextInt(6)+1) : Integer.parseInt(movePlayerM.group(4));
-
             response = Decoder.parseResponse(game.move(playerName,roll1,roll2));
         }else{
             response = "Invalid command.Available commands are:\n '- add player <player>'\n '- move <player> <roll1> <roll2>'\n";
