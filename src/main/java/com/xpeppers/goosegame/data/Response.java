@@ -19,14 +19,14 @@ package com.xpeppers.goosegame.data;
     // Here because is used just to construct responses
     public enum Status {
         OK,
+        PLAYER_CREATED,
         DUPLICATE_PLAYER,
         PLAYER_NOT_EXISTS,
         INVALID_ROLL,
         WIN,
         BOUNCE,
         BRIDGE,
-        GOOSE,
-        KO;
+        GOOSE;
     }    
 
 }

@@ -1,6 +1,9 @@
 package com.xpeppers.goosegame;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
 import static com.xpeppers.goosegame.data.Response.Status.*;
 
 
@@ -176,6 +179,31 @@ public class MovePlayerTest {
         Response<PlayerStatus> gooseJump = gooseGame.move("Pippo",1,1);
         assertTrue(gooseJump.status.equals(GOOSE));
         assertTrue(gooseJump.payload.lastPosition()== 7);
+
+    }
+
+    @Test
+    public void multipleGooseJumsp(){
+        /*
+        If there is one participant "Pippo" on space "10"
+        assuming that the dice get 2 and 2
+        when the user writes: "move Pippo"
+        the system responds: "Pippo rolls 2, 2. Pippo moves from 10 to 14, The Goose. Pippo moves again and goes to 18, The Goose. Pippo moves again and goes to 22"
+        */
+        GooseGame gooseGame = new GooseGame();
+        gooseGame.addPlayer("Pippo");
+
+        gooseGame.move("Pippo", 5, 5);
+        Response<PlayerStatus> gooseJump = gooseGame.move("Pippo", 2, 2);
+        assertTrue(gooseJump.status.equals(GOOSE));
+        List<Integer> jumps = gooseJump.payload.moves;
+        assertTrue(jumps.size() == 4);
+        assertTrue(jumps.equals(List.of(10,14,18,22)));
+        
+
+
+
+ 
 
     }
 }
