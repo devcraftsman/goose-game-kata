@@ -25,6 +25,15 @@ public class GooseGame {
     public static final Set<Integer> gooses = Set.of(5, 9, 14, 18, 23, 27);
 
     private Map<String,Integer> players= new HashMap<String,Integer>();
+    private boolean finished = false;
+
+    public Integer playerCount() {
+        return players.size();
+    }
+
+    public boolean finished(){
+        return this.finished;
+    }
 
 	public Response<PlayerStatus> addPlayer(String name) {
         if (players.containsKey(name)){
@@ -88,7 +97,8 @@ public class GooseGame {
             // WIN
             players.put(name, END);
             jumps.add(END);
-            status = WIN;            
+            status = WIN;
+            this.finished = true;            
         }else if (nextPos > END){
             // bounce
             nextPos = END - (nextPos - END);
