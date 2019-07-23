@@ -1,14 +1,11 @@
 package com.xpeppers.goosegame;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import com.xpeppers.goosegame.data.PlayerStatus;
 import com.xpeppers.goosegame.data.Response;
 
 public  abstract class Decoder {
-
-    private static Object object;
 
     public static final String parseResponse(Response<PlayerStatus> response) {
         String parsed = "";
