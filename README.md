@@ -3,10 +3,10 @@ Goose game is a game where two or more players move pieces around a track by rol
 
 ## Building and running 
 
-- This application is written using Java 11 and Maven at least 3.4.X
-- By default Java 11 is required also to run the application. As an alternative you can try to compile for a lower JDK version changing "maven.compiler.target" property in pom.xml file
+- This application is written using Java 11 and Maven (at least 3.4.x)
+- By default Java 11 is required also to run the application. As an alternative you can try to compile for a lower JDK version (not lower than 8) changing "maven.compiler.target" property in pom.xml file
 - To run the application one can:
-    - run it through maven with the following command "mvn exec:java"
+    - run it through maven with the following command: *mvn exec:java*
     - from command line with standard java $JAVA_HOME/bin/java --modulepath <PROJECT_ROOT>/target/classes -m com.xpeppers.goosegame/com.xpeppers.goosegame.App
-    - from command line running the jar $JAVA_HOME/bin/java -jar <PROJECT_ROOT>/target/goosegame-1.0-SNAPSHOT.jar
+    - from command linem after create the jar file with *mvn clean install*, running the jar $JAVA_HOME/bin/java -jar <PROJECT_ROOT>/target/goosegame-1.0-SNAPSHOT.jar
 
