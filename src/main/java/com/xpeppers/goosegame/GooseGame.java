@@ -1,6 +1,6 @@
 package com.xpeppers.goosegame;
 
-import static com.xpeppers.goosegame.data.Response.Status.*;
+import static com.xpeppers.goosegame.response.Response.Status.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.xpeppers.goosegame.data.PlayerStatus;
-import com.xpeppers.goosegame.data.Response;
+import com.xpeppers.goosegame.response.PlayerStatus;
+import com.xpeppers.goosegame.response.Response;
 
 
 public class GooseGame {
@@ -71,7 +73,7 @@ public class GooseGame {
         List<Integer> jumps = new ArrayList<>();
         Response.Status status = OK;
 
-        Integer lastPos = players.get(name);
+        final Integer lastPos = players.get(name);
         jumps.add(lastPos);
 
         int rolled = roll1 + roll2;
@@ -111,7 +113,21 @@ public class GooseGame {
             jumps.add(nextPos);
         }
 
-        return new Response<PlayerStatus>(status, new PlayerStatus(name, roll1, roll2, jumps));
+        //check pranked
+        final Integer position = nextPos; // to acces nextPos from lambda copy to a final variable
+        List<String> pranked = players.entrySet().stream()
+            .filter((e) -> !e.getKey().equals(name) && e.getValue().equals(position))
+            .map((e) -> e.getKey()).collect(Collectors.toList());
+        if (pranked.isEmpty()){
+            return new Response<PlayerStatus>(status, new PlayerStatus(name, roll1, roll2, jumps));
+        }else{
+            players.entrySet().stream()
+            .filter((e) -> pranked.contains(e.getKey()))
+            .forEach((e) -> e.setValue(lastPos));
+            return new Response<PlayerStatus>(status, new PlayerStatus(name, roll1, roll2, jumps,pranked));
+        }
+
+        
 
         
     }

@@ -1,4 +1,4 @@
-package com.xpeppers.goosegame.data;
+package com.xpeppers.goosegame.response;
 
     /**
      * Parametric default response value object. It expose a status type and a
@@ -16,7 +16,6 @@ package com.xpeppers.goosegame.data;
             this.payload=payload;
         }
 
-    // Here because is used just to construct responses
     public enum Status {
         OK,
         PLAYER_CREATED,
@@ -26,7 +25,8 @@ package com.xpeppers.goosegame.data;
         WIN,
         BOUNCE,
         BRIDGE,
-        GOOSE;
+        GOOSE,
+        PRANKED;
     }    
 
 }

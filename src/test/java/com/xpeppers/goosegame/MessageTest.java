@@ -1,14 +1,14 @@
 package com.xpeppers.goosegame;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static com.xpeppers.goosegame.data.Response.Status.*;
+import static com.xpeppers.goosegame.response.Response.Status.*;
 
 
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import com.xpeppers.goosegame.data.*;
+import com.xpeppers.goosegame.response.*;
 
 
 @SuppressWarnings({"unchecked"})
@@ -21,7 +21,7 @@ public class MessageTest{
 public void addingFirstplayer(){
     String expected = "players: Pippo";
 
-    PlayerStatus status = new PlayerStatus("Pippo", -1, -1, Collections.EMPTY_LIST);
+    PlayerStatus status = new PlayerStatus("Pippo");
     Response<PlayerStatus> response = new Response(PLAYER_CREATED, status);
 
     assertEquals(expected, Decoder.parseResponse(response));
@@ -32,7 +32,7 @@ public void addingFirstplayer(){
 public void addingMoreFirstplayer(){
     String expected = "players: Pippo, Pluto";
 
-    PlayerStatus status = new PlayerStatus("Pippo, Pluto", -1, -1, Collections.EMPTY_LIST);
+    PlayerStatus status = new PlayerStatus("Pippo, Pluto");
     Response<PlayerStatus> response = new Response(PLAYER_CREATED, status);
 
     assertEquals(expected, Decoder.parseResponse(response));
@@ -92,6 +92,28 @@ public void multipleGoose() {
     Response<PlayerStatus> response = new Response(GOOSE, status);
     assertEquals(expected, Decoder.parseResponse(response));
 }
+
+
+@Test
+public void simpleMovePranked() {
+    String expected = "Pippo rolls 4, 2. Pippo moves from Start to 6. On 6 there is Pluto, who returns to Start";
+
+    PlayerStatus status = new PlayerStatus("Pippo", 4, 2, List.of(0,6),List.of("Pluto"));
+    Response<PlayerStatus> response = new Response(OK, status);
+
+    assertEquals(expected, Decoder.parseResponse(response));
+}
+
+@Test
+public void simpleMoveMultiplePranked() {
+    String expected = "Pippo rolls 4, 2. Pippo moves from Start to 6. On 6 there is Pluto, who returns to Start. On 6 there is Paperino, who returns to Start";
+
+    PlayerStatus status = new PlayerStatus("Pippo", 4, 2, List.of(0,6),List.of("Pluto","Paperino"));
+    Response<PlayerStatus> response = new Response(OK, status);
+
+    assertEquals(expected, Decoder.parseResponse(response));
+}
+
 
 
 

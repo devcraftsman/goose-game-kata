@@ -4,18 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import static com.xpeppers.goosegame.data.Response.Status.*;
+import static com.xpeppers.goosegame.response.Response.Status.*;
 
 
 import org.junit.jupiter.api.Test;
-import com.xpeppers.goosegame.data.*;
+import com.xpeppers.goosegame.response.*;
 
 public class MovePlayerTest {
 
     @Test
     public void moveNotExistingPlayer(){
         GooseGame goosegame = new GooseGame();
-        
         Response<PlayerStatus> response = goosegame.move("pippo",4,2);
         assertTrue(response.status.equals(PLAYER_NOT_EXISTS));
     }
@@ -58,14 +57,12 @@ public class MovePlayerTest {
     @Test
     public void movePlayer(){
         GooseGame goosegame = new GooseGame();
-        
         goosegame.addPlayer("pippo");
-
         Response<PlayerStatus> response = goosegame.move("pippo",4,3);
         assertTrue(response.status.equals(OK));
         PlayerStatus player = response.payload;
-        assertTrue(player.startPosition() == 0);
-        assertTrue(player.lastPosition() == 7);
+        assertTrue(player.startPosition().equals("Start"));
+        assertTrue(player.lastPosition().equals("7"));
 
 
     }
@@ -86,7 +83,7 @@ public class MovePlayerTest {
         Response<PlayerStatus> rsp1 = gooseGame.move("Pippo", 4, 3);
         assertTrue(rsp1.status.equals(OK));
         PlayerStatus st1 = rsp1.payload;
-        assertTrue(st1.lastPosition() == 7);
+        assertTrue(st1.lastPosition().equals("7"));
         
     
         /*
@@ -98,7 +95,7 @@ public class MovePlayerTest {
         Response<PlayerStatus> rsp2 = gooseGame.move("Pluto", 2, 2);
         assertTrue(rsp2.status.equals(OK));
         PlayerStatus st2 = rsp2.payload;
-        assertTrue(st2.lastPosition() == 4);
+        assertTrue(st2.lastPosition().equals("4"));
         
         /*
             the user writes: "move Pippo 2, 3"
@@ -108,7 +105,7 @@ public class MovePlayerTest {
         Response<PlayerStatus> rsp3 = gooseGame.move("Pippo", 2, 3);
         assertTrue(rsp3.status.equals(OK));
         PlayerStatus st3 = rsp3.payload;
-        assertTrue(st3.lastPosition()== 12);
+        assertTrue(st3.lastPosition().equals("12"));
 
     }
 
@@ -124,12 +121,12 @@ public class MovePlayerTest {
         gooseGame.move("Pippo", 6, 6);
         gooseGame.move("Pippo", 6, 6);
         Response<PlayerStatus> to60 = gooseGame.move("Pippo", 6, 6);
-        assertTrue(to60.payload.lastPosition() == 60);
+        assertTrue(to60.payload.lastPosition().equals("60"));
         
 
         Response<PlayerStatus> win =gooseGame.move("Pippo",1,2);
         assertTrue(win.status.equals(WIN));
-        assertTrue(win.payload.lastPosition() == GooseGame.END);
+        assertTrue(win.payload.lastPosition().equals(String.valueOf(GooseGame.END)));
     }
 
     @Test
@@ -143,11 +140,11 @@ public class MovePlayerTest {
         gooseGame.move("Pippo", 6, 6);
         gooseGame.move("Pippo", 6, 6);
         Response<PlayerStatus> to60 = gooseGame.move("Pippo", 6, 6);
-        assertTrue(to60.payload.lastPosition() == 60);
+        assertTrue(to60.payload.lastPosition().equals("60"));
 
         Response<PlayerStatus> bounce =gooseGame.move("Pippo",3,2);
         assertTrue(bounce.status.equals(BOUNCE));
-        assertTrue(bounce.payload.lastPosition() == 61);
+        assertTrue(bounce.payload.lastPosition().equals("61"));
     }
 
     @Test
@@ -160,7 +157,7 @@ public class MovePlayerTest {
         Response<PlayerStatus> bridged = gooseGame.move("Pippo", 1,1);
     
         assertTrue(bridged.status.equals(BRIDGE));
-        assertTrue(bridged.payload.lastPosition()== 12);
+        assertTrue(bridged.payload.lastPosition().equals("12"));
     }
 
     /*
@@ -178,7 +175,7 @@ public class MovePlayerTest {
         gooseGame.move("Pippo", 1, 2);
         Response<PlayerStatus> gooseJump = gooseGame.move("Pippo",1,1);
         assertTrue(gooseJump.status.equals(GOOSE));
-        assertTrue(gooseJump.payload.lastPosition()== 7);
+        assertTrue(gooseJump.payload.lastPosition().equals("7"));
 
     }
 
@@ -199,11 +196,23 @@ public class MovePlayerTest {
         List<Integer> jumps = gooseJump.payload.moves;
         assertTrue(jumps.size() == 4);
         assertTrue(jumps.equals(List.of(10,14,18,22)));
-        
+    }
 
+    @Test
+    public void pranked(){
+        GooseGame gooseGame = new GooseGame();
+        gooseGame.addPlayer("Pippo");
+        gooseGame.addPlayer("Pluto");
+        gooseGame.move("Pippo", 2, 2);
+        gooseGame.move("Pluto", 6, 5);
 
+        Response<PlayerStatus> response = gooseGame.move("Pippo", 4, 3);
+        PlayerStatus status = response.payload;
+        assertTrue(status.pranked.size() == 1);
+        assertTrue(status.pranked.contains("Pluto"));
 
- 
-
+        Response<PlayerStatus> plutoResponse = gooseGame.move("Pluto", 2, 2);
+        assertTrue(plutoResponse.payload.startPosition().equals("4"));
+        assertTrue(plutoResponse.payload.lastPosition().equals("8"));
     }
 }

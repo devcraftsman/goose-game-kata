@@ -2,8 +2,8 @@ package com.xpeppers.goosegame;
 
 import java.util.List;
 
-import com.xpeppers.goosegame.data.PlayerStatus;
-import com.xpeppers.goosegame.data.Response;
+import com.xpeppers.goosegame.response.PlayerStatus;
+import com.xpeppers.goosegame.response.Response;
 
 public  abstract class Decoder {
 
@@ -42,6 +42,11 @@ public  abstract class Decoder {
              parsed = "";
              break;
         }
+        if (playerdata.isPranked()){
+            for (String player : playerdata.pranked){
+               parsed += ". On "+playerdata.lastPosition()+" there is "+player+", who returns to "+ playerdata.startPosition();
+            }
+        }
         return parsed;
     }
 
@@ -64,8 +69,7 @@ public  abstract class Decoder {
     }
 
     private static final String parseHeader(PlayerStatus playerdata) {
-        String startPosition  = playerdata.startPosition() == 0 ? "Start" : playerdata.startPosition().toString();
-        return playerdata.name + " rolls "+ playerdata.roll1+", "+playerdata.roll2+". "+ playerdata.name + " moves from "+ startPosition +" to ";
+        return playerdata.name + " rolls "+ playerdata.roll1+", "+playerdata.roll2+". "+ playerdata.name + " moves from "+ playerdata.startPosition() +" to ";
     }
     
 }

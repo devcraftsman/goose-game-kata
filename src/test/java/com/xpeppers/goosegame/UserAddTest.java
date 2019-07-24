@@ -2,9 +2,9 @@ package com.xpeppers.goosegame;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.xpeppers.goosegame.data.PlayerStatus;
-import com.xpeppers.goosegame.data.Response;
-import static com.xpeppers.goosegame.data.Response.Status.*;
+import com.xpeppers.goosegame.response.PlayerStatus;
+import com.xpeppers.goosegame.response.Response;
+import static com.xpeppers.goosegame.response.Response.Status.*;
 
 import org.junit.jupiter.api.Test;
 
